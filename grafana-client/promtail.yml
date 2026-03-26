@@ -1,0 +1,56 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /var/lib/promtail/positions.yaml
+
+clients:
+  - url: http://<SERVER_IP>:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: varlogs
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: varlogs
+          host: michael-test
+          __path__: /var/log/*.log
+
+  - job_name: syslog
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: syslog
+          host: michael-test
+          __path__: /var/log/syslog
+
+  - job_name: auth
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: auth
+          host: michael-test
+          __path__: /var/log/auth.log
+
+  - job_name: auditd
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: auditd
+          host: michael-test
+          __path__: /var/log/audit/audit.log
+
+  - job_name: sysmon
+    journal:
+      matches: SYSLOG_IDENTIFIER=sysmon
+    relabel_configs:
+      - source_labels: [__journal__hostname]
+        target_label: host
+        replacement: michael-test
+      - target_label: job
+        replacement: sysmon
