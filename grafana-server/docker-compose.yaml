@@ -26,7 +26,7 @@ services:
       - "3100:3100"
     volumes:
       - ./loki-config.yaml:/etc/loki/loki-config.yaml
-      - ./loki-data:/var/lib/loki
+      - loki-data:/var/lib/loki
     command: -config.file=/etc/loki/loki-config.yaml
     restart: unless-stopped
 
@@ -50,3 +50,4 @@ services:
 
 volumes:
   grafana-data:
+  loki-data:
